@@ -10,11 +10,12 @@ public class Crawler : MonoBehaviour
     public float health;
     public int score;
     public GameObject explosion;
+    public float speed = 1.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Rigidbody>().velocity = direction;
+        GetComponent<Rigidbody>().velocity = direction * speed;
         transform.position += new Vector3(0, elevation, 0);
     }
 

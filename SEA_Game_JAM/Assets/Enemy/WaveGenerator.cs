@@ -17,10 +17,16 @@ public class WaveGenerator : MonoBehaviour
     public int spawnStep = 5;
     public int maxSpawn = 5;
     public float waveBreak = 5;
+    public float maxMoveSpeed = 2.0f;
+    public float moveSpeedStep = 0.05f;
 
     public int wave = 0;
     public bool spawning = false;
     public int enemyCount = 0;
+
+    public GameObject queenPiece;
+    public float queenOffset = 2.0f;
+    public float queenSpeed = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +40,8 @@ public class WaveGenerator : MonoBehaviour
         if(!spawning)
         {
             ++wave;
+            if (wave % 5 == 0)
+                SpawnQueenPiece();
             spawning = true;
             StartCoroutine(WaveRoutine());
         }
@@ -58,6 +66,9 @@ public class WaveGenerator : MonoBehaviour
                 enemyType = Random.Range(0, enemyPrefabs.Count);
             }
 
+            float speed = Random.Range(1.0f, 1.0f + wave * moveSpeedStep);
+            if(speed > maxMoveSpeed) speed = maxMoveSpeed;
+
             Dictionary<int, bool> takenID = new Dictionary<int, bool>();
             for(int j = 0; j < spawn; ++j)
             {
@@ -74,6 +85,9 @@ public class WaveGenerator : MonoBehaviour
                 GameObject temp = Instantiate(enemyPrefabs[enemyType]);
                 temp.transform.position = gridMan.tiles[tileID].transform.position;
                 ++enemyCount;
+
+                if (temp.GetComponent<Cutter>()) temp.GetComponent<Cutter>().speed *= speed;
+                if (temp.GetComponent<Crawler>()) temp.GetComponent<Crawler>().speed *= speed;
             }
 
             yield return new WaitForSeconds(cooldown);
@@ -85,5 +99,17 @@ public class WaveGenerator : MonoBehaviour
         yield return new WaitUntil(() => { return enemyCount <= 0; });
 
         spawning = false;
+    }
+
+    void SpawnQueenPiece()
+    {
+        int y = Random.Range(0, 5);
+        int id = y * (int)gridMan.tileNumber.y;
+        Vector3 spawnPos = gridMan.tiles[id].transform.position;
+        spawnPos.x -= queenOffset;
+
+        GameObject temp = Instantiate(queenPiece);
+        temp.transform.position = spawnPos;
+        temp.GetComponent<Rigidbody>().velocity = new Vector3(1, 0, 0) * queenSpeed;
     }
 }

@@ -128,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   elevation: 1
   health: 40
-  score: 50
+  score: 250
   speed: 2
   forwardTime: 1
   explosion: {fileID: 3149718471028326870, guid: de387554f29886d449bcbf38077e174a, type: 3}

@@ -131,6 +131,10 @@ public class PlayerController : MonoBehaviour
     {
         health -= _dmg;
         if (health <= 0)
+        {
+            gameUI.ShowLoseScreen();
             Destroy(gameObject);
+        }
     }
+
 }
