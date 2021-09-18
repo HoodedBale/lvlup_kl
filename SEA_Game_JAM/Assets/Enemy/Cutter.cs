@@ -23,6 +23,7 @@ public class Cutter : MonoBehaviour
         transform.position += new Vector3(0, elevation, 0);
         m_dir = Random.Range(0, 2) % 2 == 0 ? 1 : -1;
         m_gridMan = GameObject.FindObjectOfType<GridMan>();
+        transform.DOScale(new Vector3(1, 1, 1), 0.5f);
     }
 
     // Update is called once per frame

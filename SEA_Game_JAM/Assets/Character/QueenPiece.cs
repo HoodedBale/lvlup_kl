@@ -15,9 +15,9 @@ public class QueenPiece : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Vector3 pos = transform.position;
+        Vector3 pos = transform.localPosition;
         pos.y = startHeight;
-        transform.position = pos;
+        transform.localPosition = pos;
         var seq = DOTween.Sequence();
         seq.Append(transform.DOLocalMoveY(startHeight + bopHeight, time).SetEase(Ease.Linear));
         seq.Append(transform.DOLocalMoveY(startHeight, time).SetEase(Ease.Linear));
@@ -34,6 +34,8 @@ public class QueenPiece : MonoBehaviour
         seq2.SetLoops(-1);
 
         parent = transform.parent.gameObject;
+
+        parent.transform.DOScale(new Vector3(1, 1, 1), 1.0f);
     }
 
     // Update is called once per frame

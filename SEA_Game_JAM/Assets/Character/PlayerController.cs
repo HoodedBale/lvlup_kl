@@ -46,6 +46,9 @@ public class PlayerController : MonoBehaviour
 
     public GameObject explosion;
 
+    public GameObject healthBar;
+    float m_maxhealth;
+
     [SerializeField]
     HeadMode m_currentHead;
 
@@ -56,6 +59,7 @@ public class PlayerController : MonoBehaviour
         m_currentGrid[1] = startGrid / (int)gridMan.tileNumber.y;
         m_currentGrid[0] = startGrid - m_currentGrid[1] * (int)gridMan.tileNumber.y;
 
+        m_maxhealth = health;
     }
 
     // Update is called once per frame
@@ -150,6 +154,9 @@ public class PlayerController : MonoBehaviour
     public void Damage(int _dmg)
     {
         health -= _dmg;
+
+        healthBar.transform.DOScale(new Vector3(health / m_maxhealth, 1, 1), 0.1f);
+
         if (health <= 0)
         {
             gameUI.ShowLoseScreen();

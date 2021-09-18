@@ -82,7 +82,7 @@ public class GameUI : MonoBehaviour
 
         foreach(var msg in m_loseMessages)
         {
-            if(bestMessage < msg.Key && finalScore > msg.Key)
+            if(bestMessage <= msg.Key && finalScore >= msg.Key)
             {
                 bestMessage = msg.Key;
                 loseMessage = msg.Value;
@@ -106,6 +106,7 @@ public class GameUI : MonoBehaviour
 
     public void LoadScene(int _id)
     {
+        GetComponent<AudioSource>().Play();
         fade.DOColor(Color.black, 1.0f).onComplete +=
             () => { SceneManager.LoadScene(_id); };
     }

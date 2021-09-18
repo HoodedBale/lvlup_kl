@@ -31,7 +31,7 @@ public class WaveGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        SpawnQueenPiece();
     }
 
     // Update is called once per frame
@@ -40,8 +40,6 @@ public class WaveGenerator : MonoBehaviour
         if(!spawning)
         {
             ++wave;
-            if (wave % 5 == 0)
-                SpawnQueenPiece();
             spawning = true;
             StartCoroutine(WaveRoutine());
         }
@@ -103,13 +101,22 @@ public class WaveGenerator : MonoBehaviour
 
     void SpawnQueenPiece()
     {
-        int y = Random.Range(0, 5);
-        int id = y * (int)gridMan.tileNumber.y;
-        Vector3 spawnPos = gridMan.tiles[id].transform.position;
-        spawnPos.x -= queenOffset;
+        //int y = Random.Range(0, 5);
+        //int id = y * (int)gridMan.tileNumber.y;
+        //Vector3 spawnPos = gridMan.tiles[id].transform.position;
+        //spawnPos.x -= queenOffset;
 
-        GameObject temp = Instantiate(queenPiece);
-        temp.transform.position = spawnPos;
-        temp.GetComponent<Rigidbody>().velocity = new Vector3(1, 0, 0) * queenSpeed;
+        //GameObject temp = Instantiate(queenPiece);
+        //temp.transform.position = spawnPos;
+        //temp.GetComponent<Rigidbody>().velocity = new Vector3(1, 0, 0) * queenSpeed;
+
+        for(int i = 0; i < (int)gridMan.tileNumber.x; ++i)
+        {
+            if (i % 2 == 1) continue;
+            Vector3 spawnPos = gridMan.tiles[i].transform.position;
+            GameObject temp = Instantiate(queenPiece);
+            //spawnPos.y = temp.GetComponent<QueenPiece>().startHeight;
+            temp.transform.position = spawnPos;
+        }
     }
 }

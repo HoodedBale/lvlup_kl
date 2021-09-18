@@ -17,6 +17,7 @@ public class Crawler : MonoBehaviour
     {
         GetComponent<Rigidbody>().velocity = direction * speed;
         transform.position += new Vector3(0, elevation, 0);
+        transform.DOScale(new Vector3(1, 1, 1), 0.5f);
     }
 
     // Update is called once per frame
