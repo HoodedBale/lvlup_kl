@@ -7,7 +7,9 @@ public class GridTile : MonoBehaviour
     MeshRenderer mesh;
     public Color spawnColor = new Color(1, 1, 1, 1);
     public Color defaultColor = new Color(0.8f, 0.8f, 0.8f, 1);
-    public Color bulletColor = new Color(1.0f, 0.25f, 0.0f, 1);
+    public Color bulletColor = new Color(1.0f, 0.5f, 0.0f, 1);
+    public Color playerColor = new Color(0.0f, 1.0f, 0.25f, 1);
+    public Color enemyColor = new Color(1.0f, 0.0f, 0.0f, 1);
 
     public float colorSpeed = 10.0f;
     bool m_spawned = false;
@@ -40,5 +42,18 @@ public class GridTile : MonoBehaviour
         Bullet bullet = other.GetComponent<Bullet>();
         if (bullet && m_spawned)
             mesh.material.color = bulletColor;
+
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.name == "Player" && m_spawned)
+            mesh.material.color = playerColor;
+
+        else if (other.name == "QueenPiece(Clone)" && m_spawned)
+            mesh.material.color = playerColor;
+
+        else if ((other.name == "Crawler(Clone)" || other.name == "Cutter(Clone)") && m_spawned)
+            mesh.material.color = enemyColor;
     }
 }

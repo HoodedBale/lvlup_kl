@@ -24,6 +24,7 @@ public class GameUI : MonoBehaviour
     public GameObject loseScreen;
     public TextMeshProUGUI loseTxt;
     public GameObject newHS;
+    public Image loseFade;
 
     Dictionary<int, string> m_loseMessages = new Dictionary<int, string>();
 
@@ -51,8 +52,8 @@ public class GameUI : MonoBehaviour
     void UpdateScore()
     {
         if (finalScore > maxScore) finalScore = maxScore;
-        if (score < finalScore) score += scoreSpeed * Time.deltaTime;
-        if (score > finalScore) score = finalScore;
+        if (score < finalScore) score += (finalScore - score) * scoreSpeed * Time.deltaTime;
+        if (score >= finalScore - 5) score = finalScore;
         scoreTxt.text = ((int)score).ToString("000000000");
     }
 
@@ -98,6 +99,7 @@ public class GameUI : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
 
         Sequence seq = DOTween.Sequence();
+        seq.Append(loseFade.DOColor(Color.black, 1.0f));
         seq.Append(loseScreen.transform.DOScaleY(1, 0.5f));
         seq.Append(loseScreen.transform.DOScaleX(1, 0.5f));
     }

@@ -10,6 +10,8 @@ public class QueenPiece : MonoBehaviour
     public float time = 1.0f;
     public float rotateTime = 0.5f;
 
+    public GameObject parent;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,11 +32,22 @@ public class QueenPiece : MonoBehaviour
         seq2.Append(transform.DORotate(new Vector3(0, 270, 0), rotateTime).SetEase(Ease.Linear));
         seq2.Append(lastRotate);
         seq2.SetLoops(-1);
+
+        parent = transform.parent.gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.name == "Player")
+        {
+            other.GetComponent<PlayerController>().SetQueen();
+            Destroy(parent);
+        }
     }
 }

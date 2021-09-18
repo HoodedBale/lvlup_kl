@@ -37,6 +37,15 @@ public class PlayerController : MonoBehaviour
 
     public int health = 3;
 
+    public GameObject queenPattern;
+    public float queenTime = 5.0f;
+    public float queenCD = 0.1f;
+    bool m_queenMode = false;
+
+    public Animator animBody;
+
+    public GameObject explosion;
+
     [SerializeField]
     HeadMode m_currentHead;
 
@@ -90,7 +99,8 @@ public class PlayerController : MonoBehaviour
         Vector3 dest = gridMan.tiles[m_currentGrid[1] * (int)gridMan.tileNumber.x + m_currentGrid[0]].transform.position;
         dest.y = startHeight;
 
-        transform.DOMove(dest, moveTime).onComplete += () => { m_moving = false; };
+        transform.DOMove(dest, moveTime).SetEase(Ease.Linear).onComplete += () => { m_moving = false; };
+        animBody.SetTrigger("walk");
     }
 
     void Shoot()
@@ -103,6 +113,14 @@ public class PlayerController : MonoBehaviour
 
         if (!Input.GetKey(KeyCode.Mouse0))
             return;
+
+        if(m_queenMode)
+        {
+            GameObject q = Instantiate(queenPattern);
+            q.transform.position = transform.position;
+            m_cooldown = queenCD;
+            return;
+        }
 
         GameObject temp = Instantiate(projectilePatterns[(int)m_currentHead]);
         temp.transform.position = transform.position;
@@ -125,6 +143,8 @@ public class PlayerController : MonoBehaviour
         if (newMode < 0) newMode = (int)HeadMode.SIZE - 1;
         if (newMode >= (int)HeadMode.SIZE) newMode = 0;
         m_currentHead = (HeadMode)newMode;
+
+        GetComponent<AudioSource>().Play();
     }
 
     public void Damage(int _dmg)
@@ -133,8 +153,31 @@ public class PlayerController : MonoBehaviour
         if (health <= 0)
         {
             gameUI.ShowLoseScreen();
+            GameObject temp = Instantiate(explosion);
+            temp.transform.position = transform.position;
             Destroy(gameObject);
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.name);
+        if(other.name == "QueenPiece(Clone)")
+        {
+            StartCoroutine(QueenRoutine());
+            Destroy(other.gameObject);
+        }
+    }
+
+    public void SetQueen()
+    {
+        StartCoroutine(QueenRoutine());
+    }
+
+    IEnumerator QueenRoutine()
+    {
+        m_queenMode = true;
+        yield return new WaitForSeconds(queenTime);
+        m_queenMode = false;
+    }
 }
