@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
     public GameObject queenPattern;
     public float queenTime = 5.0f;
     public float queenCD = 0.1f;
-    bool m_queenMode = false;
+    public bool m_queenMode = false;
 
     public Animator animBody;
 
@@ -76,7 +76,6 @@ public class PlayerController : MonoBehaviour
 
     void Movement()
     {
-        if (m_moving) return;
 
         int[] direction = { 0, 0 };
 
@@ -89,22 +88,49 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
             direction[0] = 1;
 
-        if (direction[0] == 0 && direction[1] == 0) return;
+        if (direction[0] == 0 && direction[1] == 0)
+        {
+            animBody.SetBool("walking", false);
+            return;
+        }
+
+        if (m_moving) return;
+
+        bool clampX = false, clampY = false;
 
         m_moving = true;
         m_currentGrid[0] += direction[0];
         m_currentGrid[1] += direction[1];
 
-        if (m_currentGrid[0] < 0) m_currentGrid[0] = 0;
-        if (m_currentGrid[1] < 0) m_currentGrid[1] = 0;
-        if (m_currentGrid[0] >= (int)gridMan.tileNumber.x) m_currentGrid[0] = (int)gridMan.tileNumber.x - 1;
-        if (m_currentGrid[1] >= (int)gridMan.tileNumber.y) m_currentGrid[1] = (int)gridMan.tileNumber.y - 1;
+        if (m_currentGrid[0] < 0)
+        {
+            clampX = true;
+            m_currentGrid[0] = 0;
+        }
+        if (m_currentGrid[1] < 0)
+        {
+            clampY = true;
+            m_currentGrid[1] = 0;
+        }
+        if (m_currentGrid[0] >= (int)gridMan.tileNumber.x)
+        {
+            clampX = true;
+            m_currentGrid[0] = (int)gridMan.tileNumber.x - 1;
+        }
+        if (m_currentGrid[1] >= (int)gridMan.tileNumber.y)
+        {
+            clampY = true;
+            m_currentGrid[1] = (int)gridMan.tileNumber.y - 1;
+        }
+
+        animBody.SetBool("walking", !((clampX && clampY) ||
+            (clampX && direction[1] == 0) ||
+            (clampY && direction[0] == 0)));
 
         Vector3 dest = gridMan.tiles[m_currentGrid[1] * (int)gridMan.tileNumber.x + m_currentGrid[0]].transform.position;
         dest.y = startHeight;
 
         transform.DOMove(dest, moveTime).SetEase(Ease.Linear).onComplete += () => { m_moving = false; };
-        animBody.SetTrigger("walk");
     }
 
     void Shoot()
@@ -168,8 +194,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
-        if(other.name == "QueenPiece(Clone)")
+        if(other.name == "QueenPiece(Clone)" && !m_queenMode)
         {
             StartCoroutine(QueenRoutine());
             Destroy(other.gameObject);

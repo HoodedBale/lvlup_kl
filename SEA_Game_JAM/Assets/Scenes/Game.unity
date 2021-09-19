@@ -2598,7 +2598,7 @@ MonoBehaviour:
   startGrid: 16
   startHeight: 1
   rotateTime: 0.1
-  moveTime: 0.5
+  moveTime: 0.25
   projectilePatterns:
   - {fileID: 2855768474271492560, guid: 8841de1a321583345ad7c35861c5a8cc, type: 3}
   - {fileID: 3447337546005123790, guid: 69c764c81e908474688779e3b412ab34, type: 3}
@@ -2614,6 +2614,7 @@ MonoBehaviour:
   queenPattern: {fileID: 251738753487922400, guid: 5deae33947316e44a9a7dfb4a15d3da7, type: 3}
   queenTime: 5
   queenCD: 0.05
+  m_queenMode: 0
   animBody: {fileID: 2130380912}
   explosion: {fileID: 3149718471028326870, guid: de387554f29886d449bcbf38077e174a, type: 3}
   healthBar: {fileID: 1540460605}

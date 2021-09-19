@@ -48,8 +48,11 @@ public class QueenPiece : MonoBehaviour
     {
         if(other.name == "Player")
         {
-            other.GetComponent<PlayerController>().SetQueen();
-            Destroy(parent);
+            if(!other.GetComponent<PlayerController>().m_queenMode)
+            {
+                other.GetComponent<PlayerController>().SetQueen();
+                Destroy(parent);
+            }
         }
     }
 }
